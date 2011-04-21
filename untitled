@@ -1,0 +1,4 @@
+import informixdb
+
+conn = informixdb.connect('cars@hewey',user='sethw',password='missy79')
+cur = conn.cursor(rowformat = informixdb.ROW_AS_DICT)

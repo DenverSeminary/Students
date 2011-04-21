@@ -1,0 +1,96 @@
+<html> 
+	<head> 
+		<title>.. : { student affinity } : ..</title>
+		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>	
+		<script type="text/javascript" src="{{ static_url("jquery.fancybox-1.3.4.pack.js") }}"></script>	
+		<script type="text/javascript" language="javascript">
+			function getCookie(name) {
+				var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+				return r ? r[1] : undefined;
+			}
+			$(document).ready(
+				function () {
+					$("#register").fancybox(
+						{
+							'transitionIn'	:	'elastic',
+							'transitionOut'	:	'elastic',
+							'speedIn'		:	200, 
+							'speedOut'		:	200, 
+							'overlayShow'	:	false,														
+						}
+					);					
+					$("#register").click(						
+						function () {
+							data = "cx_id=" + $("#cx_id").val();
+							data += "&firstname=" + $("#firstname").val();
+							data += "&lastname=" + $("#lastname").val();						
+							$.ajax({
+								type		: "POST", 
+								cache		: false, 
+								url			: "/reg_validate", 
+								data		: data
+								success: function (data) {
+									$.fancybox(data);
+								}
+							});
+						}
+					);
+				}
+			);
+		</script>
+		<link rel="stylesheet" href="{{ static_url("jquery.fancybox-1.3.4.css") }}" type="text/css" media="screen" />
+		<link rel="stylesheet" href="static/main.css" type="text/css" media="screen" />
+		<style>			
+			div#sub-wrap {
+				width: 66%; /* width of header */
+				height: 400px; /* optional */
+				margin: 0 auto; /* centers all */
+				/* border: 1px solid #f00; Layout check only */
+				margin-top:5%;
+			}
+			div#left {
+				width: 49%; /* 1/2 sub-wrap */
+				height: 400px; /* optional. NMT sub-wrap's */
+				float: left;
+				clear: right;
+				/* border: 1px solid #ff0; Layout check only */
+				text-align: right;
+			}
+			div#right {
+				width: 49%; /* 1/2 sub-wrap */
+				height: 400px; /* optional. NMT sub-wrap's */
+				float: right;
+				/* border: 1px solid #0f0;  Layout check only */
+				
+			}			
+		</style>	
+	</head> 
+	<body> 	
+		<div id="contents">
+			<div id="sub-wrap">
+				<div id="left">
+					<p>
+						<!-- this will be dynamic, but for now it looks good-->
+						<span>(( outdoor activities ))</span><br />
+						<span><label for='rock_group' >rock climbing group</label><input type='checkbox' name='rock_group' id='rock_group' /></span><br />
+						<span><label for='hiking_group' >hiking group</label><input type='checkbox' name='hiking_group' id='hiking_group' /></span><br />
+						<span><label for='ultimate_group' >ultimate frisbee group</label><input type='checkbox' name='ultimate_group' id='ultimate_group' /></span><br />
+					</p>
+					<p>
+						<!-- this will be dynamic, but for now it looks good-->
+						<span>(( indoor activities ))</span><br />
+						<span><label for='prayer' >prayer group</label><input type='checkbox' name='prayer' id='prayer' /></span><br />
+						<span><label for='dinner_couples' >dinner group (couples)</label><input type='checkbox' name='dinner_couples' id='dinner_couples' /></span><br />
+						<span><label for='dinner_open' >dinner group (open)</label><input type='checkbox' name='dinner_open' id='dinner_open' /></span><br />
+					</p>
+				</div>
+				<div id="right">
+					<p>
+						<span>[ my matches ]</span><br />
+						<a href="contact">seth washeck</a><span> __dinner group (couples)</span>
+					</p>
+				</div>
+			</div>	
+		</div>	
+	</body> 
+</html> 
