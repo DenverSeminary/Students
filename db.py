@@ -4,7 +4,7 @@
 	This will handle the database interactions for the affinity application
 '''
 
-import pymssql, informixdb, odbc        
+import pymssql, informixdb, odbc, pyodbc, adodbapi    
 	
 class BaseDB():
 	'''
@@ -23,14 +23,33 @@ class BaseDB():
 		self.cur.executemany(query, params)
 		result = self.cur.fetchall()
 		return result
-		
+	def get_value(self, query, params=None):
+		self.cur.execute(query, params)
+		result = self.cur.fetchone()
+		return result[0]
+
+class pyOdbcClient(BaseDB):
+	def __init__(self):
+		print 'instantiated pyOdbcClient'
+		self.conn = pyodbc.connect("Driver={IBM INFORMIX ODBC DRIVER};Host=hewey;Server=hewey;Service=istarcarsi;Protocol=olsoctcp;Database=train;Uid=sethw;Pwd=missy79;")
+		self.cur = self.conn.cursor()
+
 class OdbcClient():
 	def __init__(self):
+		print 'instantiated OdbcClient'
 		self.conn = odbc.odbc("Driver={IBM INFORMIX ODBC DRIVER};Host=hewey;Server=hewey;Service=istarcarsi;Protocol=olsoctcp;Database=train;Uid=sethw;Pwd=missy79;")
+		#self.conn = odbc.odbc("DSN=test")
 		self.cur = self.conn.cursor()	
-	def get_row(self, query, params = None):
+		
+	def get_value(self, query, params = None):
+		self.cur.execute(query,params)
+		data = self.cur.fetchone()		
+		return data[0]
+		
+	def get_row(self, query, params = None):		
 		self.cur.execute(query, params)
 		query_result = [ dict(line) for line in [ zip([ column[0] for column in self.cur.description ], row) for row in self.cur.fetchall() ] ]
+		#print self.cur.fetchone()		
 		return query_result[0]
 
 	

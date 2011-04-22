@@ -1,19 +1,3 @@
-#!/usr/bin/env python
-#
-# Copyright 2009 Facebook
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may
-# not use this file except in compliance with the License. You may obtain
-# a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations
-# under the License.
-
 import logging
 import os.path
 import tornado.auth
@@ -55,8 +39,9 @@ class Application(tornado.web.Application):
         )
         tornado.web.Application.__init__(self, handlers, **settings)     
         self.sqlclient = db.SqlClient()
-        self.ifxclient = db.IfxClient()
+        #self.ifxclient = db.IfxClient()
         self.odbcclient = db.OdbcClient()
+        self.pyodbcclient = db.pyOdbcClient()
         
 def registered(method):
     """Decorate with this method to restrict to site admins."""
@@ -80,59 +65,29 @@ class BaseHandler(tornado.web.RequestHandler):
 	@property
 	def odbcclient(self):
 		return self.application.odbcclient
-			
+	@property
+	def pyodbcclient(self):
+		return self.application.pyodbcclient			
 	def get_current_user(self):
 		user_json = self.get_secure_cookie("user")
 		if not user_json: return None
 		return tornado.escape.json_decode(user_json)
 
 class ValidationHandler(BaseHandler):
-	@tornado.web.authenticated
 	def post(self):
 		cx_id = self.get_argument("cx_id")
-		lastname = self.get_argument("lastname")
-		firstname = self.get_argument("firstname")		
-		ids = []
-		nextid = int(cx_id)
-		firstid = int(cx_id)
-		ids.append(nextid)
-		data = []	
-		user_data = self.odbcclient.get_row(
-		'''
-			select  i.id, addr_line1, zip, email2, txt
-				from id_rec i 
-				join prog_enr_rec p on i.id = p.id
-					join major_table m on p.major1 = m.major
-				where i.id = ?''',[ids[0]])
-		data.append(user_data)
-		sql = '''
-			select first 1 i.id, addr_line1, zip, email2, txt
-				from id_rec i 
-				join prog_enr_rec p on i.id = p.id
-					join major_table m on p.major1 = m.major
-				where i.id >= ? and i.id not in (%s)
-					and addr_line1 is not null and  zip is not null 
-					and email2 is not null and email2 != ' ' and txt is not null and txt !=  ? '''
-		for x in range(4):	
-			stmt = sql  % ','.join('%s' % i for i in ids)
-			print stmt
-			while nextid in ids:
-				nextid = random.randint(firstid-1000, firstid+100)		
-			row = self.odbcclient.get_row(stmt, [nextid, user_data['txt']])								
-			data.append(row)
-			ids.append(nextid)
-		
-		#for each point of validation we can random.shuffle(data)	
-		random.shuffle(data)
-		emails = [ person['email2'].strip() for person in data ] 			
-		random.shuffle(data)
-		majors = [ person['txt'] for person in data ]
-		random.shuffle(data)
-		address = [ person['addr_line1'] for person in data ]
-		random.shuffle(data)
-		zips = [ person['zip'] for person in data ]
-		
-		self.render('validate.html',emails=emails,majors=majors,address=address,zips=zips)
+		valtype = self.get_argument("valtype")
+		value = self.get_argument("value")
+		if valtype == "major":
+			sql = "select count(id) from major_table m join prog_enr_rec p on m.major = p.major1 and p.id = ? and m.txt = ?"
+		else:			
+			sql = "select count(id) from id_rec where id = ? and %s = ?" % valtype						
+		ct = self.pyodbcclient.get_value(sql, [str(cx_id), str(value)])
+		print ct
+		if ct == 0:			
+			self.render("fail.html",cx_id=cx_id, email='',firstname='',lastname='')
+		else:
+			self.write('1')			
         
 class RegisterHandler(BaseHandler):
 	@tornado.web.authenticated
@@ -141,6 +96,56 @@ class RegisterHandler(BaseHandler):
 			self.redirect("/")
 		else:
 			self.render("register.html")
+	@tornado.web.authenticated
+	def post(self):
+		cx_id = self.get_argument("cx_id")
+		lastname = self.get_argument("lastname")
+		firstname = self.get_argument("firstname")	
+		email = self.get_argument("email")	
+		ids = []
+		nextid = int(cx_id)
+		firstid = int(cx_id)
+		ids.append(nextid)		
+		emails = []
+		majors = []
+		address = []
+		zips = []	
+		user_data = self.odbcclient.get_row(
+		'''
+			select  i.id, addr_line1, substring(zip from 0 for 6) zip, email2, txt
+				from id_rec i 
+				join prog_enr_rec p on i.id = p.id
+					join major_table m on p.major1 = m.major
+				where i.id = ?''',[ids[0]])	
+		emails.append(user_data['email2'])
+		majors.append(user_data['txt'])
+		address.append(user_data['addr_line1'])
+		zips.append(user_data['zip'])
+		sql = '''
+			select first 1 i.id, addr_line1, substring(zip from 0 for 6) zip, email2, txt
+				from id_rec i 
+				join prog_enr_rec p on i.id = p.id
+					join major_table m on p.major1 = m.major
+				where i.id >= ? and i.id not in (%s)
+					and addr_line1 is not null and  addr_line1 not in ('',%s) 
+					and zip is not null and substring(zip from 0 for 6) not in ('',%s)
+					and email2 is not null and email2 not in ('',%s)
+					and txt is not null and txt not in ('',%s) '''
+		for x in range(4):	
+			stmt = sql  % (','.join('%s' % i for i in ids), ','.join("'%s'" % i for i in address), ','.join("'%s'" % i for i in zips), ','.join("'%s'" % i for i in emails), ','.join("'%s'" % i for i in majors))			
+			while nextid in ids:
+				nextid = random.randint(firstid-1000, firstid+100)		
+			row = self.odbcclient.get_row(stmt, [nextid, user_data['txt']])								
+			emails.append(row['email2'])
+			majors.append(row['txt'])
+			address.append(row['addr_line1'])
+			zips.append(row['zip'])
+			ids.append(nextid)		
+		random.shuffle(emails)
+		random.shuffle(address)
+		random.shuffle(majors)
+		random.shuffle(zips)		
+		self.render('validate.html',email=email,firstname=firstname,lastname=lastname,cx_id=cx_id,emails=emails,majors=majors,address=address,zips=zips)
 
 class UserProfile(BaseHandler):
 	@tornado.web.authenticated

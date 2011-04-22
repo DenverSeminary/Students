@@ -36,34 +36,17 @@
 		</style>	
 	</head> 
 	<body> 	
-		<form>
-			<div id="main" style="width:50%;">		
+		<form method="post" action="/register">
+			<div style="width:50%;">		
 				<div id='emails' class="slider" >
-					{% for email in emails %}
-						<label>{{ email }} <input type='radio' name='email' value='{{ email }}' /></label><br />
-					{% end %}
-					<a href="#" id="v_email">next-></a>
-				</div>
-				<div id="addrs" class="slider" >
-					{% for addr in address %}
-						<label>{{ addr }} <input type='radio' name='addr' value='{{ addr }}' /></label><br />
-					{% end %}
-					<a href="#" id="v_addr">next-></a>
-				</div>
-				<div id="zips" class="slider" >
-					{% for zip in zips %}
-						<label>{{ zip }} <input type='radio' name='zip' value='{{ zip }}' /></label><br />
-					{% end %}
-					<a href="#" id="v_zip">next-></a>
-				</div>
-				<div id="majors" class="slider" >
-					{% for major in majors %}
-						<label>{{ major }} <input type='radio' name='major' value='{{ major }}' /></label><br />
-					{% end %}
-					<a href="#" id="v_major">next-></a>
-				</div>				
+					<span>i'm sorry. you didn't pass validation. unfortunately you will need to try again</span><br />
+					<button type="submit" value="submit" />
+				</div>							
 			</div>
 			<input type="hidden" id="cx_id" name="cx_id" value = "{{ cx_id }}" />
+			<input type="hidden" id="email" name="email" value = "{{ email }}" />
+			<input type="hidden" id="firstname" name="firstname" value = "{{ firstname }}" />
+			<input type="hidden" id="lastname" name="lastname" value = "{{ lastname }}" />
 		</form>
 	</body> 
 </html> 
