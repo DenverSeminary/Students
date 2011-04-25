@@ -1,20 +1,23 @@
 $(document).ready(	
 	function () {
-		cx_id = $("#cx_id").val();
-		/*	STILL NEED TO IMPLEMENT THESE HIDDEN ELEMENTS BELOW
-		 * firstname = $("#firstname").val();
+		cx_id = $("#cx_id").val();		
+		firstname = $("#firstname").val();
 		lastname = $("#lastname").val();
-		email = $("#email").val();
-		*/
+		email = $("#email").val();		
+		$("#retry").click(
+			function ()
+			{
+				alert($("#retry.frm").html());
+				$("#retry_frm").submit();
+			}
+		);
 		$("#emails").fadeIn("fast");		
 		$("#v_email").click(
 			function () {
 				$("#emails").fadeOut("fast",
 					function () {						
-						value = $('input:radio[name=email]:checked').val();						
-						value = value.replace(/^\s*|\s*$/g,'');
-						alert(value);	
-						alert("'valtype=email2" + "&value=" + value + "&cx_id="+ cx_id + "'");
+						value = $('input:radio[name=vemail]:checked').val();						
+						value = value.replace(/^\s*|\s*$/g,'');						
 						$.ajax(
 							{
 								type: "POST", 
@@ -40,9 +43,7 @@ $(document).ready(
 				$("#addrs").fadeOut("fast",
 					function () {						
 						value = $('input:radio[name=addr]:checked').val();						
-						value = value.replace(/^\s*|\s*$/g,'');
-						alert(value);	
-						alert("'valtype=addr_line1" + "&value=" + value + "&cx_id="+ cx_id + "'");
+						value = value.replace(/^\s*|\s*$/g,'');						
 						$.ajax(
 							{
 								type: "POST", 
@@ -68,9 +69,7 @@ $(document).ready(
 				$("#zips").fadeOut("fast",
 					function () {						
 						value = $('input:radio[name=zip]:checked').val();						
-						value = value.replace(/^\s*|\s*$/g,'');
-						alert(value);	
-						alert("'valtype=zip" + "&value=" + value + "&cx_id="+ cx_id + "'");
+						value = value.replace(/^\s*|\s*$/g,'');						
 						$.ajax(
 							{
 								type: "POST", 
@@ -96,9 +95,7 @@ $(document).ready(
 				$("#majors").fadeOut("fast",
 					function () {						
 						value = $('input:radio[name=major]:checked').val();						
-						value = value.replace(/^\s*|\s*$/g,'');
-						alert(value);	
-						alert("'valtype=major" + "&value=" + value + "&cx_id="+ cx_id + "'");
+						value = value.replace(/^\s*|\s*$/g,'');						
 						$.ajax(
 							{
 								type: "POST", 
@@ -108,6 +105,21 @@ $(document).ready(
 									function (data) {
 										if (data=="1"){											
 											$("#main").html("YOU PASSED!!!!");
+											// here we need to, instead of respond with "YOU PASSED", register the user and then redirect to /
+											alert(email + firstname + lastname + cx_id);	
+											
+											$.ajax (
+												{
+													type: "POST", 
+													url: "/finish",
+													data: "cx_id=" + cx_id + "&firstname=" + firstname + "&lastname=" + lastname + "&email=" + email,
+													success:
+														function (data) {
+															alert(data);
+														}
+												}
+											)
+																					
 										}
 										else {
 											$("#main").html(data);

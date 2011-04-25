@@ -26,7 +26,10 @@ class BaseDB():
 	def get_value(self, query, params=None):
 		self.cur.execute(query, params)
 		result = self.cur.fetchone()
-		return result[0]
+		return result[0]		
+	def set_value(self, query, params=None):
+		self.cur.execute(query, params)
+		self.conn.commit()
 
 class pyOdbcClient(BaseDB):
 	def __init__(self):

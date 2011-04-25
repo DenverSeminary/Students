@@ -25,6 +25,7 @@ class Application(tornado.web.Application):
             (r"/logout", AuthLogoutHandler),
             (r"/user/([0-9]+)", UserProfile), 
             (r"/register", RegisterHandler), 
+            (r"/finish", FinishRegistration),
             (r"/reg_validate", ValidationHandler),
             (r"/user/edit/([0-9]+)", EditUserProfile), 
         ]
@@ -47,12 +48,18 @@ def registered(method):
     """Decorate with this method to restrict to site admins."""
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        if self.sqlclient.get_row("select count(*) from users where auth_acct = %s and auth_svc = %s", (self.current_user['id'], 'fb'))[0] == 0:
-            self.redirect('/register')
-            return
-            raise web.HTTPError(403)        
-        else:
-            return method(self, *args, **kwargs)
+		cx_id = self.get_secure_cookie("cx_id")
+		if not cx_id:
+			cx_id = self.sqlclient.get_row("select cx_id from users where auth_acct = %s and auth_svc = %s", (self.current_user['id'], 'fb'))[0] 
+			if not cx_id:
+				self.redirect('/register')
+				return
+				raise web.HTTPError(403)        
+			else:
+				self.set_secure_cookie('cx_id',str(cx_id))
+				return method(self, *args, **kwargs)
+		else:
+			return method(self, *args, **kwargs)
     return wrapper
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -74,6 +81,7 @@ class BaseHandler(tornado.web.RequestHandler):
 		return tornado.escape.json_decode(user_json)
 
 class ValidationHandler(BaseHandler):
+	@tornado.web.authenticated
 	def post(self):
 		cx_id = self.get_argument("cx_id")
 		valtype = self.get_argument("valtype")
@@ -85,9 +93,23 @@ class ValidationHandler(BaseHandler):
 		ct = self.pyodbcclient.get_value(sql, [str(cx_id), str(value)])
 		print ct
 		if ct == 0:			
-			self.render("fail.html",cx_id=cx_id, email='',firstname='',lastname='')
+			self.render("fail.html",cx_id=cx_id)
 		else:
 			self.write('1')			
+			
+class FinishRegistration(BaseHandler):
+	@tornado.web.authenticated
+	def post(self):
+		cx_id = self.get_argument("cx_id")
+		firstname = self.get_argument("firstname")
+		lastname = self.get_argument("lastname")
+		email = self.get_argument("email")
+		auth_svc = 'fb'
+		auth_acct = self.current_user['id']
+		self.sqlclient.set_value("insert into users (cx_id, firstname, lastname, email, auth_acct, auth_svc) VALUES (%d,%s,%s,%s,%s,%s)",
+			(int(cx_id), firstname, lastname, email, auth_acct, auth_svc))
+		self.write("DONE")
+				
         
 class RegisterHandler(BaseHandler):
 	@tornado.web.authenticated
@@ -162,8 +184,7 @@ class MainHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
     #@tornado.web.asynchronous
     @registered
     def get(self):			
-		for key, value in self.current_user.iteritems():
-			self.write("%s = %s <br />" % (key, value))
+		self.render("main.html", cx_id=self.get_secure_cookie("cx_id"))
 
 class AuthLoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
     @tornado.web.asynchronous

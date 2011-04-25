@@ -1,11 +1,8 @@
 <html> 
 	<head> 
 		<title>.. : { register } : ..</title>
-		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>	
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="{{ static_url("jquery.fancybox-1.3.4.pack.js") }}"></script>	
-		<script type="text/javascript" src="{{ static_url("validate.js") }}"></script>	
-		<link rel="stylesheet" href="{{ static_url("jquery.fancybox-1.3.4.css") }}" type="text/css" media="screen" />
+		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>					
+		<script type="text/javascript" src="{{ static_url("validate.js") }}"></script>			
 		<link rel="stylesheet" href="{{ static_url("main.css") }}" type="text/css" media="screen" />
 		<style>			
 			div#sub-wrap {
@@ -36,34 +33,43 @@
 		</style>	
 	</head> 
 	<body> 	
-		<form>
+		
 			<div id="main" style="width:50%;">		
 				<div id='emails' class="slider" >
-					{% for email in emails %}
-						<label>{{ email }} <input type='radio' name='email' value='{{ email }}' /></label><br />
+					<span style='font-size: 14pt; font-weight: bold;'>verify your email address</span><br />
+					{% for vemail in emails %}
+						<label>{{ vemail }} <input type='radio' name='vemail' value='{{ vemail }}' /></label><br />
 					{% end %}
 					<a href="#" id="v_email">next-></a>
 				</div>
 				<div id="addrs" class="slider" >
+					<span style='font-size: 14pt; font-weight: bold;'>verify your address</span><br />
 					{% for addr in address %}
 						<label>{{ addr }} <input type='radio' name='addr' value='{{ addr }}' /></label><br />
 					{% end %}
 					<a href="#" id="v_addr">next-></a>
 				</div>
 				<div id="zips" class="slider" >
+					<span style='font-size: 14pt; font-weight: bold;'>verify your zip code</span><br />
 					{% for zip in zips %}
 						<label>{{ zip }} <input type='radio' name='zip' value='{{ zip }}' /></label><br />
 					{% end %}
 					<a href="#" id="v_zip">next-></a>
 				</div>
 				<div id="majors" class="slider" >
+					<span style='font-size: 14pt; font-weight: bold;'>verify your major</span><br />
 					{% for major in majors %}
 						<label>{{ major }} <input type='radio' name='major' value='{{ major }}' /></label><br />
 					{% end %}
 					<a href="#" id="v_major">next-></a>
 				</div>				
 			</div>
-			<input type="hidden" id="cx_id" name="cx_id" value = "{{ cx_id }}" />
-		</form>
+			<form id="register" name="register" method="post" action="/reg_validate">
+				<input type="hidden" id="cx_id" name="cx_id" value = "{{ cx_id }}" />
+				<input type="hidden" id="lastname" name="lastname" value = "{{ lastname }}" />
+				<input type="hidden" id="firstname" name="firstname" value = "{{ firstname }}" />
+				<input type="hidden" id="email" name="email" value = "{{ email }}" />
+			</form>
+		
 	</body> 
 </html> 
