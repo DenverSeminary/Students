@@ -22,6 +22,7 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", MainHandler),
             (r"/login", AuthLoginHandler),
+            (r"/admin", AdminHander),
             (r"/logout", AuthLogoutHandler),
             (r"/user/([0-9]+)", UserProfile), 
             (r"/register", RegisterHandler), 
@@ -167,8 +168,15 @@ class RegisterHandler(BaseHandler):
 		random.shuffle(address)
 		random.shuffle(majors)
 		random.shuffle(zips)		
-		self.render('validate.html',email=email,firstname=firstname,lastname=lastname,cx_id=cx_id,emails=emails,majors=majors,address=address,zips=zips)
-
+		self.render('validate.html',email=email,firstname=firstname,lastname=lastname,cx_id=cx_id,emails=emails,majors=majors,address=address,zips=zips)	
+		
+class AdminHander(BaseHandler):
+	@tornado.web.authenticated
+	@registered	
+	def get(self):
+		categories = self.sqlclient.get_all("select id,value from categories")
+		activities = self.sqlclient.get_all("select id,value from activities")
+		self.render("admin.html", categories=categories, activities=activities)
 class UserProfile(BaseHandler):
 	@tornado.web.authenticated
 	def get(self, uid):

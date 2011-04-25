@@ -17,8 +17,8 @@ class BaseDB():
 		return row	
 	def get_all(self, query, params=None):
 		self.cur.execute(query, params)
-		row = self.cur.fetchall()	
-		return row	
+		rows = self.cur.fetchall()	
+		return rows	
 	def get_many(self, query, params=None):
 		self.cur.executemany(query, params)
 		result = self.cur.fetchall()
