@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>.. : { student affinity } : ..</title>
+		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>			
+		<script type="text/javascript" language="javascript">
+			function getCookie(name) {
+				var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+				return r ? r[1] : undefined;
+			}
+			$(document).ready(
+				function () {		
+					$("#middle").fadeIn();			
+				}
+			);
+		</script>	
+<link rel="stylesheet" href="{{ static_url("main.css") }}" type="text/css" media="screen" />
+</head>
+
+<body>
+
+<div class="container">
+  <div class="header"><a href="#"><img src="" alt="Insert Logo Here" name="Insert_logo" width="20%" height="90" id="Insert_logo" style="background: #8090AB; display:block;" /></a> 
+	
+    <!-- end .header -->
+  </div>
+  <div class="sidebar1">
+    <ul class="nav">
+      <li><a href="#">my profile</a></li>
+      <li><a href="#">edit my profile</a></li>      
+    </ul>
+    <p>here are your affinity matches. if you would like to change them, simply edit your profile.</p>
+    
+    <!-- end .sidebar1 --></div>
+  <div class="content">
+    <h1>affinity matches</h1>
+    <p>we'll put some matches in here</p>
+    <!-- end .content --></div>
+  <div class="sidebar2">
+    <h4>messages</h4>
+    <p>here's a message</p>
+    <!-- end .sidebar2 --></div>
+  <div class="footer">
+    <p></p>
+    <!-- end .footer --></div>
+  <!-- end .container --></div>
+</body>
+</html>

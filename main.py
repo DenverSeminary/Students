@@ -51,13 +51,13 @@ def registered(method):
     def wrapper(self, *args, **kwargs):
 		cx_id = self.get_secure_cookie("cx_id")
 		if not cx_id:
-			cx_id = self.sqlclient.get_row("select cx_id from users where auth_acct = %s and auth_svc = %s", (self.current_user['id'], 'fb'))[0] 
+			cx_id = self.sqlclient.get_row("select cx_id from users where auth_acct = %s and auth_svc = %s", (self.current_user['id'], 'fb'))
 			if not cx_id:
 				self.redirect('/register')
 				return
 				raise web.HTTPError(403)        
 			else:
-				self.set_secure_cookie('cx_id',str(cx_id))
+				self.set_secure_cookie('cx_id',str(cx_id[0]))
 				return method(self, *args, **kwargs)
 		else:
 			return method(self, *args, **kwargs)
@@ -109,7 +109,7 @@ class FinishRegistration(BaseHandler):
 		auth_acct = self.current_user['id']
 		self.sqlclient.set_value("insert into users (cx_id, firstname, lastname, email, auth_acct, auth_svc) VALUES (%d,%s,%s,%s,%s,%s)",
 			(int(cx_id), firstname, lastname, email, auth_acct, auth_svc))
-		self.write("DONE")
+		self.redirect("/")
 				
         
 class RegisterHandler(BaseHandler):
@@ -118,7 +118,7 @@ class RegisterHandler(BaseHandler):
 		if self.sqlclient.get_row("select count(*) from users where auth_acct = %s and auth_svc = %s", (self.current_user['id'], 'fb'))[0] > 0:
 			self.redirect("/")
 		else:
-			self.render("register.html")
+			self.render("register2.html")
 	@tornado.web.authenticated
 	def post(self):
 		cx_id = self.get_argument("cx_id")
@@ -185,14 +185,43 @@ class UserProfile(BaseHandler):
 class EditUserProfile(BaseHandler):
 	@tornado.web.authenticated
 	def get(self, uid):
-		self.write("Future Home of User Edit Profile Information for uid=%s" % uid)
+		if uid.isdigit():
+			sql = "select cx_id, firstname, lastname, email, isnull(phone,'Phone Number') phone, isnull(facebook, 'Facebook URL') facebook,	isnull(twitter, 'Twitter URL') twitter,	isnull(blog, 'Blog URL') blog from users where cx_id=%s"
+			profile = self.sqlclient.get_row(sql, (uid,))
+			self.render("profedit.html", profile=profile)
+		else:
+			self.redirect("/")
+			
 
 class MainHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
     @tornado.web.authenticated    
     #@tornado.web.asynchronous
     @registered
-    def get(self):			
-		self.render("main.html", cx_id=self.get_secure_cookie("cx_id"))
+    def get(self):
+		sql = '''
+			select categoryid, category, a.activityid, activity, userid
+				from (	
+						select c.id CategoryID, c.value Category, a.id ActivityID, a.value Activity
+								from activities a 
+									right join categories c 
+										on a.categoryid = c.id ) as a
+				left join signups s 
+					on a.activityid = s.activityid
+						and s.userid = 0
+		'''		
+		
+		data = self.sqlclient.get_all(sql)				
+		categorynames = list(set([row['category'] for row in data]))		
+		signups = {}
+		for name in categorynames:
+			signups[name] = []
+			for row in data:
+				if row['category'] == name:
+					if row['userid'] is not None:						
+						signups[name].append({'activity':row['activity'], 'activityid': row['activityid'], 'checked': True})
+					else:
+						signups[name].append({'activity':row['activity'], 'activityid': row['activityid'], 'checked': False})
+		self.render("main2.html", signups=signups, cx_id=self.get_secure_cookie("cx_id"))
 
 class AuthLoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
     @tornado.web.asynchronous
@@ -222,7 +251,8 @@ class AuthLoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
 class AuthLogoutHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
     def get(self):
         self.clear_cookie("user")
-        self.redirect(self.get_argument("next", "/"))
+        self.clear_cookie("cx_id")
+        self.redirect("http://denverseminary.edu")
 
 def main():
     tornado.options.parse_command_line()

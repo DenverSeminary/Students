@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>.. : { register } : ..</title>
+		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>			
+		<script type="text/javascript" language="javascript">
+			function getCookie(name) {
+				var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+				return r ? r[1] : undefined;
+			}
+			$(document).ready(
+				function () {					
+					$('input[type=text]').each(function() {
+						var default_value = this.value;
+						$(this).focus(function() {
+							if(this.value == default_value) {
+								this.value = '';
+							}
+						});
+						$(this).blur(function() {
+							if(this.value == '') {
+								this.value = default_value;
+							}
+						});
+					});					
+				}
+			);
+		</script>	
+<link rel="stylesheet" href="{{ static_url("main.css") }}" type="text/css" media="screen" />
+</head>
+<body>
+<div class="container">
+  <div class="header"><a href="#"><img src="" alt="Insert Logo Here" name="Insert_logo" width="20%" height="90" id="Insert_logo" style="background: #8090AB; display:block;" /></a> 
+	
+    <!-- end .header -->
+  </div>
+  <div class="sidebar1">
+    <ul class="nav">
+      <li><a href="#">my profile</a></li>
+      <li><a href="#">edit my profile</a></li>      
+    </ul>
+    <p>here are your affinity matches. if you would like to change them, simply edit your profile.</p>    
+    <!-- end .sidebar1 -->
+  </div>
+  <div class="content">
+    <h1>edit your profile</h1>
+    <div id="demographic">
+		  <input type='text' value='{{ profile["cx_id"] }}' id='cx_id' name='cx_id' /><label for="cx_id">student id</label> <br />
+		  <input type='text' value='{{ profile["firstname"] }}' id='firstname' name='firstname' /><label for="firstname">first name</label><br />
+		  <input type='text' value='{{ profile["lastname"] }}' id='lastname' name='lastname' /><label for="lastname">last name</label><br />
+		  <input type='text' value='{{ profile["email"] }}' id='email' name='email' /><label for="email">email address</label><br />
+		  <input type='text' value='{{ profile["phone"] }}' id='phone' name='phone' /><label for="phone">phone number</label><br />
+		  <input type='text' value='{{ profile["twitter"] }}' id='twitter' name='twitter' /><label for="twitter">twitter url</label><br />
+		  <input type='text' value='{{ profile["facebook"] }}' id='facebook' name='facebook' /><label for="facebook">facebook url</label><br />
+    </div>
+    <!-- end .content --></div>
+  <div id="regform" class="sidebar2">
+	  <form method="post" action="/register">
+		  <input type='text' value='Student ID' id='cx_id' name='cx_id' /><label for="cx_id">student id</label> <br />
+		  <input type='text' value='First Name' id='firstname' name='firstname' /><label for="firstname">first name</label><br />
+		  <input type='text' value='Last Name' id='lastname' name='lastname' /><label for="lastname">last name</label><br />
+		  <input type='text' value='Email Address' id='email' name='email' /><label for="email">email address</label><br />
+		  <br style="clear:both;" /><input type="submit" value="register" />
+	  </form>
+    <!-- end .sidebar2 --></div>
+  <div class="footer">
+    <p></p>
+    <!-- end .footer --></div>
+  <!-- end .container --></div>
+</body>
+</html>

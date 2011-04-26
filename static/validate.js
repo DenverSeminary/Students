@@ -103,11 +103,8 @@ $(document).ready(
 								data: "valtype=major" + "&value=" + value + "&cx_id="+ cx_id,
 								success:
 									function (data) {
-										if (data=="1"){											
-											$("#main").html("YOU PASSED!!!!");
-											// here we need to, instead of respond with "YOU PASSED", register the user and then redirect to /
-											alert(email + firstname + lastname + cx_id);	
-											
+										if (data=="1"){																						
+											// here we need to, instead of respond with "YOU PASSED", register the user and then redirect to /											
 											$.ajax (
 												{
 													type: "POST", 
@@ -115,7 +112,7 @@ $(document).ready(
 													data: "cx_id=" + cx_id + "&firstname=" + firstname + "&lastname=" + lastname + "&email=" + email,
 													success:
 														function (data) {
-															alert(data);
+															window.location("/");
 														}
 												}
 											)

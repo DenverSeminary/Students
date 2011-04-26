@@ -41,7 +41,19 @@
 				height: 400px; /* optional. NMT sub-wrap's */
 				float: right;
 				/* border: 1px solid #0f0;  Layout check only */				
-			}			
+			}	
+			ul
+			{
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+			text-align: right;
+			}
+
+			li
+			{			
+			padding-right: .6em;
+			}		
 		</style>	
 	</head> 
 	<body> 	
@@ -54,41 +66,19 @@
 					</ul>
 				</div>
 				<div id="middle">
-					<p>
-						<!-- this will be dynamic, but for now it looks good-->
-						<span>(( outdoor activities ))</span><br />
-						<span><label for='rock_group' >rock climbing group</label><input type='checkbox' name='rock_group' id='rock_group' /></span><br />
-						<span><label for='hiking_group' >hiking group</label><input type='checkbox' name='hiking_group' id='hiking_group' /></span><br />
-						<span><label for='ultimate_group' >ultimate frisbee group</label><input type='checkbox' name='ultimate_group' id='ultimate_group' /></span><br />
-					</p>
-					<p>
-						<!-- this will be dynamic, but for now it looks good-->
-						<span>(( indoor activities ))</span><br />
-						<span><label for='prayer' >prayer group</label><input type='checkbox' name='prayer' id='prayer' /></span><br />
-						<span><label for='dinner_couples' >dinner group (couples)</label><input type='checkbox' name='dinner_couples' id='dinner_couples' /></span><br />
-						<span><label for='dinner_open' >dinner group (open)</label><input type='checkbox' name='dinner_open' id='dinner_open' /></span><br />
-					</p>
-					<p>
-						<!-- this will be dynamic, but for now it looks good-->
-						<span>(( community groups ))</span><br />
-						<span><label for='prayer' >prayer group</label><input type='checkbox' name='prayer' id='prayer' /></span><br />
-						<span><label for='dinner_couples' >dinner group (couples)</label><input type='checkbox' name='dinner_couples' id='dinner_couples' /></span><br />
-						<span><label for='dinner_open' >dinner group (open)</label><input type='checkbox' name='dinner_open' id='dinner_open' /></span><br />
-					</p>
-					<p>
-						<!-- this will be dynamic, but for now it looks good-->
-						<span>(( academic groups ))</span><br />
-						<span><label for='prayer' >prayer group</label><input type='checkbox' name='prayer' id='prayer' /></span><br />
-						<span><label for='dinner_couples' >dinner group (couples)</label><input type='checkbox' name='dinner_couples' id='dinner_couples' /></span><br />
-						<span><label for='dinner_open' >dinner group (open)</label><input type='checkbox' name='dinner_open' id='dinner_open' /></span><br />
-					</p>
-					<p>
-						<!-- this will be dynamic, but for now it looks good-->
-						<span>(( spiritual groups ))</span><br />
-						<span><label for='prayer' >prayer group</label><input type='checkbox' name='prayer' id='prayer' /></span><br />
-						<span><label for='dinner_couples' >dinner group (couples)</label><input type='checkbox' name='dinner_couples' id='dinner_couples' /></span><br />
-						<span><label for='dinner_open' >dinner group (open)</label><input type='checkbox' name='dinner_open' id='dinner_open' /></span><br />
-					</p>
+					{% for categoryname, signs in signups.iteritems() %}	
+						<p>
+						<span> (( {{ categoryname }} ))</span><br />
+						{% for s in signs %}
+							<span><label for='{{ s['activityid'] }}'>{{ s['activity'] }}</label>
+								{% if s['checked'] %}
+									<input type='checkbox' name='{{ s['activityid'] }}' id='{{ s['activityid'] }}' checked/></span><br />
+								{% else %}
+									<input type='checkbox' name='{{ s['activityid'] }}' id='{{ s['activityid'] }}' /></span><br />
+								{% end %}
+						{% end %}			
+						</p>
+					{% end %}						
 				</div>
 				<div id="right">
 					<p>
