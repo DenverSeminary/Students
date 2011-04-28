@@ -24,11 +24,13 @@ class Application(tornado.web.Application):
             (r"/login", AuthLoginHandler),
             (r"/admin", AdminHander),
             (r"/logout", AuthLogoutHandler),
-            (r"/user/([0-9]+)", UserProfile), 
+            (r"/profile/([0-9]+)", UserProfile), 
             (r"/register", RegisterHandler), 
+            (r"/affinity/edit", ChangeAffinity), 
+            (r"/affinity", GetAffinity), 
             (r"/finish", FinishRegistration),
             (r"/reg_validate", ValidationHandler),
-            (r"/user/edit/([0-9]+)", EditUserProfile), 
+            (r"/profile/edit/([0-9]+)", EditUserProfile), 
         ]
         settings = dict(
             cookie_secret="12oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
@@ -80,6 +82,42 @@ class BaseHandler(tornado.web.RequestHandler):
 		user_json = self.get_secure_cookie("user")
 		if not user_json: return None
 		return tornado.escape.json_decode(user_json)
+		
+		
+class ChangeAffinity(BaseHandler):
+	@tornado.web.authenticated
+	@registered
+	def get(self):
+		sql = '''
+			select categoryid, category, a.activityid, activity, userid
+					from (	
+							select c.id CategoryID, c.value Category, a.id ActivityID, a.value Activity
+									from activities a 
+										right join categories c 
+											on a.categoryid = c.id ) as a
+					left join signups s 
+						on a.activityid = s.activityid
+							and s.userid = %s
+			'''		
+			
+		data = self.sqlclient.get_all(sql, self.get_secure_cookie("cx_id"))				
+		categorynames = list(set([row['category'] for row in data]))		
+		signups = {}
+		for name in categorynames:
+			signups[name] = []
+			for row in data:
+				if row['category'] == name:
+					if row['userid'] is not None:						
+						signups[name].append({'activity':row['activity'], 'activityid': row['activityid'], 'checked': True})
+					else:
+						signups[name].append({'activity':row['activity'], 'activityid': row['activityid'], 'checked': False})
+		self.render("affinityprefs.html", cx_id=self.get_secure_cookie("cx_id"), signups=signups)
+		
+class GetAffinity(BaseHandler):
+	@tornado.web.authenticated
+	@registered
+	def get(self):
+		self.render("affinity.html", cx_id=self.get_secure_cookie("cx_id"))
 
 class ValidationHandler(BaseHandler):
 	@tornado.web.authenticated
@@ -118,7 +156,7 @@ class RegisterHandler(BaseHandler):
 		if self.sqlclient.get_row("select count(*) from users where auth_acct = %s and auth_svc = %s", (self.current_user['id'], 'fb'))[0] > 0:
 			self.redirect("/")
 		else:
-			self.render("register2.html")
+			self.render("register.html")
 	@tornado.web.authenticated
 	def post(self):
 		cx_id = self.get_argument("cx_id")
@@ -179,19 +217,21 @@ class AdminHander(BaseHandler):
 		self.render("admin.html", categories=categories, activities=activities)
 class UserProfile(BaseHandler):
 	@tornado.web.authenticated
+	@registered
 	def get(self, uid):
-		self.write("Future Home of User Profile Information for uid=%s" % uid)
+		sql = "select cx_id, firstname, lastname, email, isnull(phone,'Phone Number') phone, isnull(facebook, 'Facebook URL') facebook,	isnull(twitter, 'Twitter URL') twitter,	isnull(blog, 'Blog URL') blog from users where cx_id=%s"
+		profile = self.sqlclient.get_row(sql, (uid,))
+		self.render("profile.html", profile=profile)		
 
 class EditUserProfile(BaseHandler):
 	@tornado.web.authenticated
 	def get(self, uid):
 		if uid.isdigit():
 			sql = "select cx_id, firstname, lastname, email, isnull(phone,'Phone Number') phone, isnull(facebook, 'Facebook URL') facebook,	isnull(twitter, 'Twitter URL') twitter,	isnull(blog, 'Blog URL') blog from users where cx_id=%s"
-			profile = self.sqlclient.get_row(sql, (uid,))
-			self.render("profedit.html", profile=profile)
+			profile = self.sqlclient.get_row(sql, (uid,))			
+			self.render("profileedit.html", profile=profile)		
 		else:
-			self.redirect("/")
-			
+			self.redirect("/")			
 
 class MainHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
     @tornado.web.authenticated    
@@ -221,7 +261,7 @@ class MainHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
 						signups[name].append({'activity':row['activity'], 'activityid': row['activityid'], 'checked': True})
 					else:
 						signups[name].append({'activity':row['activity'], 'activityid': row['activityid'], 'checked': False})
-		self.render("main2.html", signups=signups, cx_id=self.get_secure_cookie("cx_id"))
+		self.render("main.html", signups=signups, cx_id=self.get_secure_cookie("cx_id"))
 
 class AuthLoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
     @tornado.web.asynchronous

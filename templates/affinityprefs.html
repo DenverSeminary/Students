@@ -1,0 +1,86 @@
+<html>
+	<head> 
+		<title>3 Column CSS Demo - Equal Height Columns with Cross-Browser CSS</title> 
+		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>				
+		<script type="text/javascript" language="javascript">
+			$(document).ready(				
+				function () {										
+					$('.choice').first().fadeIn();					
+					$('.storeChoice').click(
+						function () {		
+							/// in here we'll need to put some ajaxy goodness that stores the preferences					
+							var $next = $(this).parent(".choice").next();
+							if ($next.attr("id") == null)
+							{
+								// redirect to someplace else
+								alert("LAST CALL!");								
+								var data = $('input[type="checkbox"]:checked').map(function(i,n) { 
+									return $(n).val();
+								}).get(); //get converts it to an array 
+								alert(data);
+							}							
+							$(this).parent(".choice").fadeOut("fast", 
+								function()
+								{
+									$next.fadeIn();
+								}
+							);							
+						}
+					);
+										
+				}
+			);			
+		</script>
+		<link rel="stylesheet" href="{{ static_url("main.css") }}" type="text/css" media="screen" />
+		<style>
+			.choice {display: none;}
+		</style>
+	</head> 
+	<body id="active3">  
+		<div id="header"> 
+			<p>denver seminary students</p>
+		</div> 
+		<div id="container3"> 
+			<div id="container2"> 
+				<div id="container1"> 
+					<div id="col1"> 
+						<!-- Column one start --> 
+						<ul class="nav">
+						  <li><a href="/profile/79342" style="border-top: 1px solid #666;" >my profile</a></li>
+						  <li>
+							  <a href="/affinity">my matches</a>							  
+						  </li>						       
+						</ul>						
+						<!-- Column one end --> 
+					</div> 
+					<div id="col2" style="text-align: right;"> 
+						<!-- Column two start --> 
+						<h2>Select Your Preferences</h2>
+						{% for categoryname, signs in signups.iteritems() %}	
+							<div id='{{ categoryname }}' class="choice">
+								<span style="font-weight: bold;"> (( {{ categoryname }} ))</span><br />
+								{% for s in signs %}
+									<span><label for='{{ s["activityid"] }}'>{{ s['activity'] }}</label>
+										{% if s['checked'] %}
+											<input type='checkbox' name='{{ s["activityid"] }}' value='{{ s["activityid"] }}' id='{{ s["activityid"] }}' checked /></span><br />
+										{% else %}
+											<input type='checkbox' name='{{ s["activityid"] }}' value='{{ s["activityid"] }}' id='{{ s["activityid"] }}'  /></span><br />
+										{% end %}
+								{% end %}	
+								<a id="cat1save" href = "#" class="storeChoice">save</a>		
+							</div>
+						{% end %}							
+						<!-- Column two end --> 
+					</div> 
+					<div id="col3" style="display: none;"> 
+						<!-- Column three start --> 								
+						<!-- Column three end --> 
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+		<div id="footer"> 
+			
+		</div> 	 
+	</body> 
+</html>

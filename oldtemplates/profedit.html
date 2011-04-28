@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>.. : { profile } : ..</title>
+		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>			
+		<script type="text/javascript" language="javascript">
+			function getCookie(name) {
+				var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+				return r ? r[1] : undefined;
+			}
+			$(document).ready(
+				function () {			
+					$("#demographic").fadeIn();		
+					$("#demogclick").click(
+						function ()
+						{							
+							$("#affinity").fadeOut("fast", 
+								function ()
+								{
+									$("#demographic").fadeIn("fast");											
+								}
+							);									
+						}
+					);
+					$("#affinityclick").click(
+						function ()
+						{							
+							$("#demographic").fadeOut("fast", 
+								function ()
+								{
+									$("#affinity").fadeIn("fast");											
+								}
+							);									
+						}
+					);
+					$('input[type=text]').each(function() {
+						var default_value = this.value;
+						$(this).focus(function() {
+							if(this.value == default_value) {
+								this.value = '';
+							}
+						});
+						$(this).blur(function() {
+							if(this.value == '') {
+								this.value = default_value;
+							}
+						});
+					});					
+				}
+			);
+		</script>	
+<link rel="stylesheet" href="{{ static_url("main.css") }}" type="text/css" media="screen" />
+<style>
+	#affinity {
+		display: none;
+	}
+	input {
+		text-align: right;
+	}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header"><a href="#"><img src="" alt="Insert Logo Here" name="Insert_logo" width="20%" height="90" id="Insert_logo" style="background: #8090AB; display:block;" /></a> 
+	
+    <!-- end .header -->
+  </div>
+  <div class="sidebar1">
+    <ul class="nav">
+      <li><a href="/user/{{ profile['cx_id'] }}">view my profile</a></li>
+	  <li><a href="/user/edit/{{ profile['cx_id'] }}">edit my profile</a></li>
+    </ul>
+    <p>
+		
+		<ul class="nav">
+		  <li><a href="#" id="demogclick">personal</a></li>
+		  <li><a href="#" id="affinityclick">affinity preferences</a></li>      
+		</ul>
+	</p>    
+    <!-- end .sidebar1 -->
+  </div>
+  <div class="content">
+	<input type='hidden' value='{{ profile["cx_id"] }}' id='cx_id' name='cx_id' />
+    <h1>edit your profile</h1>
+    <div id="demographic">	
+		  <h4>personal info</h4>
+		  <label for="firstname">first name</label> <input type='text' value='{{ profile["firstname"] }}' id='firstname' name='firstname' /><br />
+		  <label for="lastname">last name</label> <input type='text' value='{{ profile["lastname"] }}' id='lastname' name='lastname' /><br />
+		  <label for="email">email address</label> <input type='text' value='{{ profile["email"] }}' id='email' name='email' /><br />
+		  <label for="phone">phone number</label> <input type='text' value='{{ profile["phone"] }}' id='phone' name='phone' /><br />
+		  <label for="twitter">twitter url</label> <input type='text' value='{{ profile["twitter"] }}' id='twitter' name='twitter' /><br />
+		  <label for="facebook">facebook url</label> <input type='text' value='{{ profile["facebook"] }}' id='facebook' name='facebook' /><br />
+		  <label for="blog">blog url</label> <input type='text' value='{{ profile["blog"] }}' id='blog' name='blog' /><br />		  
+    </div>
+    <div id="affinity">	
+    <h4>affinity matching</h4>	  
+	{% for categoryname, signs in signups.iteritems() %}	
+		<div id='{{ categoryname }}' style="margin-bottom: 15px;">
+			<span style="font-weight: bold;"> (( {{ categoryname }} ))</span><br />
+			{% for s in signs %}
+				<span><label for='{{ s["activityid"] }}'>{{ s['activity'] }}</label>
+					{% if s['checked'] %}
+						<input type='checkbox' name='{{ s["activityid"] }}' id='{{ s["activityid"] }}' checked /></span><br />
+					{% else %}
+						<input type='checkbox' name='{{ s["activityid"] }}' id='{{ s["activityid"] }}' /></span><br />
+					{% end %}
+			{% end %}			
+		</div>
+	{% end %}	  
+    </div>
+    <!-- end .content --></div>
+  <div id="regform" class="sidebar2">	  
+    <!-- end .sidebar2 --></div>
+  <div class="footer">
+    <p></p>
+    <!-- end .footer --></div>
+  <!-- end .container --></div>
+</body>
+</html>

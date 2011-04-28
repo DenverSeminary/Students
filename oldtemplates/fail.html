@@ -1,0 +1,46 @@
+<html> 
+	<head> 
+		<title>.. : { register } : ..</title>
+		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>			
+		<script type="text/javascript" src="{{ static_url("validate.js") }}"></script>			
+		<link rel="stylesheet" href="{{ static_url("main.css") }}" type="text/css" media="screen" />
+		<style>			
+			div#sub-wrap {
+				width: 66%; /* width of header */
+				
+				margin: 0 auto; /* centers all */
+				/* border: 1px solid #f00; Layout check only */
+				margin-top:15%;
+			}
+			div#left {
+				width: 49%; /* 1/2 sub-wrap */				
+				/* border: 1px solid #ff0; Layout check only */
+				text-align: right;
+			}
+			div#right {
+				width: 49%; /* 1/2 sub-wrap */				
+				float: right;
+				/* border: 1px solid #0f0;  Layout check only */
+				
+			}	
+			.slider {
+				padding: 3%;
+				text-align: right;				
+				width: 50%;
+				position: absolute;				
+			}		
+		</style>	
+	</head> 
+	<body> 			
+			<div style="width:50%;">		
+				<div id='emails' class="slider" >
+					<span>i'm sorry. you didn't pass validation. unfortunately you will need to try again</span><br />					
+					<input type="hidden" id="cx_id" name="cx_id" value = "{{ cx_id }}" />
+					<input type="hidden" id="email" name="email" value = "{{ email }}" />
+					<input type="hidden" id="firstname" name="firstname" value = "{{ firstname }}" />
+					<input type="hidden" id="lastname" name="lastname" value = "{{ lastname }}" />
+					<a href="/register">retry</a>
+				</div>							
+			</div>				
+	</body> 
+</html> 

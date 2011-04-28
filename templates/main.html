@@ -1,92 +1,146 @@
-<html> 
+<html>
 	<head> 
-		<title>.. : { student affinity } : ..</title>
-		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>			
-		<script type="text/javascript" language="javascript">
-			function getCookie(name) {
-				var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
-				return r ? r[1] : undefined;
+		<title>3 Column CSS Demo - Equal Height Columns with Cross-Browser CSS</title> 	
+		<style media="screen" type="text/css"> 
+			/* <!-- */
+			body {				
+				font: 10pt Corbel, Verdana, Arial, Helvetica, sans-serif;
+				//background: #4E5869;
+				margin: 0;
+				padding: 0;
+				color: #000;
 			}
-			$(document).ready(
-				function () {		
-					$("#middle").fadeIn();			
-				}
-			);
-		</script>		
-		<link rel="stylesheet" href="{{ static_url("main.css") }}" type="text/css" media="screen" />
-		<style>			
-			div#sub-wrap {
-				width: 90%; /* width of header */
-				height: 400px; /* optional */
-				margin: 0 auto; /* centers all */
-				/* border: 1px solid #f00; Layout check only */
-				margin-top:5%;
+			input {font-family: Calibri, Corbel, Verdana, Arial, sans-serif; font-size: 10pt;}
+			#header h1,
+			#header h2,
+			#header p {
+				margin-left:2%;
+				padding-right:2%;
+			}			
+			#footer {
+				clear:both;
+				float:left;
+				width:100%;
 			}
-			div#left {
-				width: 30%; /* 1/2 sub-wrap */
-				height: 400px; /* optional. NMT sub-wrap's */
-				float: left;
-				clear: right;
-				text-align: right;
-				/* border: 1px solid #ff0; Layout check only */				
+			#footer p {
+				margin-left:2%;
+				padding-right:2%;
 			}
-			div#middle {
-				width: 30%;
-				float: left;
-				text-align: right;
-				display: none;
+			 
+			/* Start of Column CSS */
+			#container3 {
+				clear:left;
+				float:left;
+				width:100%;
+				overflow:hidden;
+				
 			}
-			div#right {
-				width: 30%; /* 1/2 sub-wrap */
-				height: 400px; /* optional. NMT sub-wrap's */
-				float: right;
-				/* border: 1px solid #0f0;  Layout check only */				
-			}	
-			ul
-			{
-			list-style-type: none;
-			padding: 0;
-			margin: 0;
-			text-align: right;
+			#container2 {
+				clear:left;
+				float:left;
+				width:100%;
+				position:relative;
+				right:33.333%;				
+			}
+			#container1 {
+				float:left;
+				width:100%;
+				position:relative;
+				right:33.33%;				
+			}
+			#col1 {
+				float:left;
+				width:29.33%;
+				position:relative;
+				left:68.67%;
+				overflow:hidden;
+			}
+			#col2 {
+				float:left;
+				width:29.33%;
+				position:relative;
+				left:72.67%;
+				overflow:hidden;
+			}
+			#col3 {
+				float:left;
+				width:29.33%;
+				position:relative;
+				left:76.67%;
+				overflow:hidden;
+			}
+			a:link {
+				color:#414958;
+				text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
+			}
+			a:visited {
+				color: #4E5869;
+				text-decoration: underline;
+			}
+			a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
+				text-decoration: none;
+			}
+			.content ul, .content ol { 
+				padding: 0 15px 15px 40px; /* this padding mirrors the right padding in the headings and paragraph rule above. Padding was placed on the bottom for space between other elements on the lists and on the left to create the indention. These may be adjusted as you wish. */
 			}
 
-			li
-			{			
-			padding-right: .6em;
-			}		
-		</style>	
+			/* ~~ The navigation list styles (can be removed if you choose to use a premade flyout menu like Spry) ~~ */
+			ul.nav {
+				list-style: none; /* this removes the list marker */				
+				margin-bottom: 15px; /* this creates the space between the navigation on the content below */
+			}
+			ul.nav li {
+				border-bottom: 1px solid #666; /* this creates the button separation */
+				
+			}
+			ul.nav a, ul.nav a:visited { /* grouping these selectors makes sure that your links retain their button look even after being visited */
+				padding: 5px 5px 5px 15px;
+				display: block; /* this gives the link block properties causing it to fill the whole LI containing it. This causes the entire area to react to a mouse click. */
+				text-decoration: none;				
+				color: #000;
+			}
+			ul.nav a:hover, ul.nav a:active, ul.nav a:focus { /* this changes the background and text color for both mouse and keyboard navigators */
+				background: #6F7D94;
+				color: #FFF;
+			}
+			/* --> */
+		</style> 
 	</head> 
-	<body> 	
-		<div id="contents">
-			<div id="sub-wrap">
-				<div id="left">		
-					<ul>
-						<li><a href="/user/{{ cx_id }}">view my profile</a></li>
-						<li><a href="/user/edit/{{ cx_id }}">edit my profile</a></li>
-					</ul>
-				</div>
-				<div id="middle">
-					{% for categoryname, signs in signups.iteritems() %}	
+	<body id="active3">  
+		<div id="header"> 
+			<p>denver seminary students</p>
+		</div> 
+		<div id="container3"> 
+			<div id="container2"> 
+				<div id="container1"> 
+					<div id="col1"> 
+						<!-- Column one start --> 
+						<ul class="nav">
+						  <li><a href="/profile/79342" style="border-top: 1px solid #666;" >my profile</a></li>
+						  <li><a href="/affinity">my matches</a></li>						       
+						</ul>						
+						<!-- Column one end --> 
+					</div> 
+					<div id="col2" style="text-align: right;"> 
+						<!-- Column two start --> 
+						<h2>Denver Seminary Students</h2> 										
 						<p>
-						<span> (( {{ categoryname }} ))</span><br />
-						{% for s in signs %}
-							<span><label for='{{ s['activityid'] }}'>{{ s['activity'] }}</label>
-								{% if s['checked'] %}
-									<input type='checkbox' name='{{ s['activityid'] }}' id='{{ s['activityid'] }}' checked/></span><br />
-								{% else %}
-									<input type='checkbox' name='{{ s['activityid'] }}' id='{{ s['activityid'] }}' /></span><br />
-								{% end %}
-						{% end %}			
+							Welcome to the Denver Seminary Students site. For now we're sticking with affinity/small group matching, but be on the lookout for other things that
+							we may be releasing on this site.
 						</p>
-					{% end %}						
-				</div>
-				<div id="right">
-					<p>
-						<span>[ my matches ]</span><br />
-						<a href="contact">seth washeck</a><span> __dinner group (couples)</span>
-					</p>
-				</div>
-			</div>	
-		</div>	
+						<!-- Column two end --> 
+					</div> 
+					<div id="col3" style="display: none;"> 
+						<!-- Column three start --> 		
+						<h2>Your Overlap</h2>				
+						<p>You have no overlap with Seth</p>
+						<!-- Column three end --> 
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+		<div id="footer"> 
+			
+		</div> 	 
 	</body> 
-</html> 
+</html>

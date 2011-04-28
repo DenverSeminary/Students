@@ -1,0 +1,92 @@
+<html> 
+	<head> 
+		<title>.. : { student affinity } : ..</title>
+		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>			
+		<script type="text/javascript" language="javascript">
+			function getCookie(name) {
+				var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+				return r ? r[1] : undefined;
+			}
+			$(document).ready(
+				function () {		
+					$("#middle").fadeIn();			
+				}
+			);
+		</script>		
+		<link rel="stylesheet" href="{{ static_url("main.css") }}" type="text/css" media="screen" />
+		<style>			
+			div#sub-wrap {
+				width: 90%; /* width of header */
+				height: 400px; /* optional */
+				margin: 0 auto; /* centers all */
+				/* border: 1px solid #f00; Layout check only */
+				margin-top:5%;
+			}
+			div#left {
+				width: 30%; /* 1/2 sub-wrap */
+				height: 400px; /* optional. NMT sub-wrap's */
+				float: left;
+				clear: right;
+				text-align: right;
+				/* border: 1px solid #ff0; Layout check only */				
+			}
+			div#middle {
+				width: 30%;
+				float: left;
+				text-align: right;
+				display: none;
+			}
+			div#right {
+				width: 30%; /* 1/2 sub-wrap */
+				height: 400px; /* optional. NMT sub-wrap's */
+				float: right;
+				/* border: 1px solid #0f0;  Layout check only */				
+			}	
+			ul
+			{
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+			text-align: right;
+			}
+
+			li
+			{			
+			padding-right: .6em;
+			}		
+		</style>	
+	</head> 
+	<body> 	
+		<div id="contents">
+			<div id="sub-wrap">
+				<div id="left">		
+					<ul>
+						<li><a href="/user/{{ cx_id }}">view my profile</a></li>
+						<li><a href="/user/edit/{{ cx_id }}">edit my profile</a></li>
+					</ul>
+				</div>
+				<div id="middle">
+					{% for categoryname, signs in signups.iteritems() %}	
+						<p>
+						<span> (( {{ categoryname }} ))</span><br />
+						{% for s in signs %}
+							<span><label for='{{ s['activityid'] }}'>{{ s['activity'] }}</label>
+								{% if s['checked'] %}
+									<input type='checkbox' name='{{ s['activityid'] }}' id='{{ s['activityid'] }}' checked/></span><br />
+								{% else %}
+									<input type='checkbox' name='{{ s['activityid'] }}' id='{{ s['activityid'] }}' /></span><br />
+								{% end %}
+						{% end %}			
+						</p>
+					{% end %}						
+				</div>
+				<div id="right">
+					<p>
+						<span>[ my matches ]</span><br />
+						<a href="contact">seth washeck</a><span> __dinner group (couples)</span>
+					</p>
+				</div>
+			</div>	
+		</div>	
+	</body> 
+</html> 

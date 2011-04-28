@@ -1,46 +1,29 @@
 <html>
 	<head> 
-		<title>3 Column CSS Demo - Equal Height Columns with Cross-Browser CSS</title> 
-		<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" language="javascript"></script>				
-		<script type="text/javascript" language="javascript">
-			function getCookie(name) {
-				var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
-				return r ? r[1] : undefined;
-			}
-			$(document).ready(
-				function () {
-					$('input[type=text]').each(function() {
-						var default_value = this.value;
-						$(this).focus(function() {
-							if(this.value == default_value) {
-								this.value = '';
-							}
-						});
-						$(this).blur(function() {
-							if(this.value == '') {
-								this.value = default_value;
-							}
-						});
-					});					
-				}
-			);
-		</script>
+		<title>3 Column CSS Demo - Equal Height Columns with Cross-Browser CSS</title> 	
 		<style media="screen" type="text/css"> 
 			/* <!-- */
-			.choice {display: none;}
 			body {				
-				font: 10pt Corbel, Verdana, Arial, Helvetica, sans-serif;				
+				font: 10pt Corbel, Verdana, Arial, Helvetica, sans-serif;
+				//background: #4E5869;
 				margin: 0;
 				padding: 0;
 				color: #000;
 			}
-			input {font-family: Calibri, Corbel, Verdana, Arial, sans-serif; font-size: 10pt;}
 			#header h1,
 			#header h2,
 			#header p {
 				margin-left:2%;
 				padding-right:2%;
-			}			
+			}
+			#active2 #tab2,
+			#active3 #tab3,
+			#active4 #tab4,
+			#active5 #tab5 {
+				font-weight:bold;
+				text-decoration:none;
+				color:#000;
+			}
 			#footer {
 				clear:both;
 				float:left;
@@ -110,17 +93,18 @@
 
 			/* ~~ The navigation list styles (can be removed if you choose to use a premade flyout menu like Spry) ~~ */
 			ul.nav {
-				list-style: none; /* this removes the list marker */				
+				list-style: none; /* this removes the list marker */
+				border-top: 1px solid #666; /* this creates the top border for the links - all others are placed using a bottom border on the LI */
 				margin-bottom: 15px; /* this creates the space between the navigation on the content below */
 			}
 			ul.nav li {
 				border-bottom: 1px solid #666; /* this creates the button separation */
-				
 			}
 			ul.nav a, ul.nav a:visited { /* grouping these selectors makes sure that your links retain their button look even after being visited */
 				padding: 5px 5px 5px 15px;
 				display: block; /* this gives the link block properties causing it to fill the whole LI containing it. This causes the entire area to react to a mouse click. */
-				text-decoration: none;				
+				text-decoration: none;
+				background: #8090AB;
 				color: #000;
 			}
 			ul.nav a:hover, ul.nav a:active, ul.nav a:focus { /* this changes the background and text color for both mouse and keyboard navigators */
@@ -137,36 +121,55 @@
 		<div id="container3"> 
 			<div id="container2"> 
 				<div id="container1"> 
-					<div id="col1" style="display: none;"> 
+					<div id="col1"> 
 						<!-- Column one start --> 
 						<ul class="nav">
-						  <li><a href="profile.html" style="border-top: 1px solid #666;" >my profile</a></li>
-						  <li><a href="affinity.html">edit my profile</a></li>      
+						  <li><a href="#">my profile</a></li>
+						  <li><a href="#">edit my profile</a></li>      
 						</ul>						
 						<!-- Column one end --> 
 					</div> 
-					<div id="col2" style="text-align: right;"> 
+					<div id="col2"> 
 						<!-- Column two start --> 
-						<h2>registration</h2>							
-						<p>hey - looks like you're already logged in to facebook. if you want an account here we can associate your student id (with some verification, of course) with this facebook account and log you in automatically.</p>
+						<h2>No Images</h2> 
+						<p>This three column layout requires no images. Many CSS website designs need images to colour in the column backgrounds but that is not necessary with this design. Why waste bandwidth and precious HTTP requests when you can do everything in pure CSS and HTML?</p> 
+						<h2>Valid XHTML strict markup</h2> 
+						<p>The HTML in this layout validates as XHTML 1.0 strict.</p> 
+						<h2>This layout is FREE for anyone to use</h2> 
+						<p>You don't have to pay anything. Simply view the source of this page and save the HTML onto your computer. My only suggestion is to put the CSS into a separate file. If you are feeling generous however, link back to this page so other people can find and use this layout too.</p> 
 						<!-- Column two end --> 
 					</div> 
-					<div id="col3" style="margin-top: 5%;"> 
-						<!-- Column three start --> 								
-						<form method="post" action="/register">
-							<input type='text' value='Student ID' id='cx_id' name='cx_id' /><label for="cx_id">student id</label> <br />
-							<input type='text' value='First Name' id='firstname' name='firstname' /><label for="firstname">first name</label><br />
-							<input type='text' value='Last Name' id='lastname' name='lastname' /><label for="lastname">last name</label><br />
-							<input type='text' value='Email Address' id='email' name='email' /><label for="email">email address</label><br />
-						<br style="clear:both;" /><input type="submit" value="register" />
-						</form>
+					<div id="col3"> 
+						<!-- Column three start --> 
+						<h2>Cross-Browser Compatible</h2> 
+						<p>This 3 column layout has been tested on the following browsers:</p> 
+						<h3>iPhone &amp; iPod Touch</h3> 
+						<ul> 
+							<li>Safari</li> 
+						</ul> 
+						<h3>Mac</h3> 
+						<ul> 
+							<li>Safari</li> 
+							<li>Firefox</li> 
+							<li>Opera 9</li> 
+							<li>Netscape 7 &amp; 9</li> 
+						</ul> 
+						<h3>Windows</h3> 
+						<ul> 
+							<li>Firefox 1.5, 2 &amp; 3</li> 
+							<li>Safari</li> 
+							<li>Opera 8 &amp; 9</li> 
+							<li>Explorer 5.5, 6 &amp; 7</li> 
+							<li>Google Chrome</li> 
+							<li>Netscape 8</li> 
+						</ul> 
 						<!-- Column three end --> 
 					</div> 
 				</div> 
 			</div> 
 		</div> 
 		<div id="footer"> 
-			
+			<p>This page uses the <a href="http://matthewjamestaylor.com/blog/equal-height-columns-3-column.htm" title="Equal Height Columns with Cross-Browser CSS &amp; No Hacks">Three Equal Height Columns Layout</a> by <a href="http://matthewjamestaylor.com">Matthew James Taylor</a>. View more <a href="http://matthewjamestaylor.com/blog/-website-layouts">website layouts</a>.</p> 
 		</div> 	 
 	</body> 
 </html>

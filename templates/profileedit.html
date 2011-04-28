@@ -1,0 +1,45 @@
+<html>
+	<head> 
+		<title>3 Column CSS Demo - Equal Height Columns with Cross-Browser CSS</title> 	
+		<link rel="stylesheet" href="{{ static_url("main.css") }}" type="text/css" media="screen" />
+	</head> 
+	<body id="active3">  
+		<div id="header"> 
+			<p>denver seminary students</p>
+		</div> 
+		<div id="container3"> 
+			<div id="container2"> 
+				<div id="container1"> 
+					<div id="col1"> 
+						<!-- Column one start --> 
+						<ul class="nav">
+						  <li><a href="/profile/79342" style="border-top: 1px solid #666;" >my profile</a></li>
+						  <li><a href="/affinity">my matches</a></li>						       
+						</ul>						
+						<!-- Column one end --> 
+					</div> 
+					<div id="col2" style="text-align: right;"> 
+						<!-- Column two start --> 
+						<h2>Your Profile Information</h2> 
+						<label for="email">First Name: </label><input type="text" value="{{ profile['firstname'] }}" /><br />
+						<label for="email">Last Name: </label><input type="text" value="{{ profile['lastname'] }}" /><br />
+						<label for="email">Email: </label><input type="text" value="{{ profile['email'] }}" /><br />						
+						<label for="email">Facebook: </label><input type="text" value="{{ profile['facebook'] }}" /><br />
+						<label for="email">Twitter: </label><input type="text" value="{{ profile['twitter'] }}" /><br />
+						<label for="email">Blog: </label><input type="text" value="{{ profile['blog'] }}" /><br />						
+						<!-- Column two end --> 
+					</div> 
+					<div id="col3" style="display: none;"> 
+						<!-- Column three start --> 		
+						<h2>Your Overlap</h2>				
+						<p>You have no overlap with Seth</p>
+						<!-- Column three end --> 
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+		<div id="footer"> 
+			
+		</div> 	 
+	</body> 
+</html>
